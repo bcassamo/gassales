@@ -9,9 +9,7 @@ import javax.persistence.Embeddable;
 @Getter
 @Setter
 public class Endereco {
+    private String bairro;
     private String rua;
     private String numero;
-    private String bairro;
-    private String cidade;
-    private String provincia;
 }

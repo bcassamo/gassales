@@ -19,7 +19,7 @@ public class Produto {
 
     @NotNull
     @Size(min = 3, max = 50)
-    private String designacao;
+    private String nome;
 
     @Size(min = 3, max = 255)
     private String descricao;
@@ -29,6 +29,6 @@ public class Produto {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "id_tipo")
+    @JoinColumn(name = "id_tipo_produto")
     private TipoProduto tipoProduto;
 }

@@ -4,19 +4,29 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Entity
 @Getter
 @Setter
-@Entity
-@Table(name = "filial")
-public class Filial {
+@Table(name = "entidade")
+public class Entidade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotNull
     @Size(min = 3, max = 50)
     private String nome;
+
+    @NotNull
+    private int nuit;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private TipoEntidade tipo;
+
+    @Embedded
+    private Endereco endereco;
 }

@@ -22,11 +22,6 @@ public class Lancamento {
     private String descricao;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "id_filial")
-    private Filial filial;
-
-    @NotNull
     @OneToOne
     @JoinColumn(name = "id_produto")
     private Produto produto;

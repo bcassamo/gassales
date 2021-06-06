@@ -22,9 +22,4 @@ public class Stock {
     @OneToOne
     @JoinColumn(name = "id_produto")
     private Produto produto;
-
-    @NotNull
-    @OneToOne
-    @JoinColumn(name = "id_filial")
-    private Filial filial;
 }
