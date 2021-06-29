@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -22,18 +23,29 @@ public class Lancamento {
     private String descricao;
 
     @NotNull
-    @OneToOne
-    @JoinColumn(name = "id_produto")
-    private Produto produto;
-
-    @NotNull
-    private Long quantidade;
-
-    @NotNull
     @Column(name = "data_lancamento")
     private LocalDate dataLancamento;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private EstadoProduto estado;
+
+    @NotNull
+    private BigDecimal preco;
+
+    @NotNull
+    private Long quantidade;
+
+    @NotNull
+    private BigDecimal valorTotal;
+
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "id_produto")
+    private Produto produto;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "id_business")
+    private Business business;
 }

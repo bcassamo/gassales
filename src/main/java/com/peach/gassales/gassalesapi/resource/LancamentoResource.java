@@ -42,6 +42,7 @@ public class LancamentoResource {
         return lancamento.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // TODO: Eliminar este metodo porque só vai ser criado lancamento no business(Venda ou aquisicao)
     @PostMapping
     public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
         Lancamento lancamentoSalvo = lancamentoService.novoLancamento(lancamento, this, response);
