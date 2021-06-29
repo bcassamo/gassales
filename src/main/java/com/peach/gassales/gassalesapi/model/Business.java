@@ -7,31 +7,30 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "produto")
-public class Produto {
+@Table(name = "business")
+public class Business {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @NotNull
-    @Size(min = 3, max = 50)
-    private String nome;
-
-    @Size(min = 3, max = 255)
+    @Size(min = 3, max = 20)
     private String descricao;
 
     @NotNull
-    private BigDecimal tamanho;
+    @Column(name = "data_business")
+    private LocalDate dataBusiness;
 
     @NotNull
-    private BigDecimal preco;
+    @Column(name = "valor_business")
+    private BigDecimal valorBusiness;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "id_tipo_produto")
-    private TipoProduto tipoProduto;
+    @JoinColumn(name = "id_entidade")
+    private Entidade entidade;
 }

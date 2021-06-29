@@ -1,25 +1,21 @@
 package com.peach.gassales.gassalesapi.repository.filter;
 
-import com.peach.gassales.gassalesapi.model.EstadoProduto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.time.LocalDate;
 
 @Getter
 @Setter
-public class LancamentoFilter {
+public class BusinessFilter {
     private String descricao;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dataLancamentoDe;
+    private LocalDate dataBusinessDe;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dataLancamentoAte;
+    private LocalDate dataBusinessAte;
 
-    @Enumerated(EnumType.STRING)
-    private EstadoProduto estado;
+    // private Entidade entidade;
 }

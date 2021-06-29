@@ -1,7 +1,7 @@
 package com.peach.gassales.gassalesapi.repository.lancamento;
 
-import com.peach.gassales.gassalesapi.model.EstadoProduto;
 import com.peach.gassales.gassalesapi.model.Lancamento;
+import com.peach.gassales.gassalesapi.model.Lancamento_;
 import com.peach.gassales.gassalesapi.repository.filter.LancamentoFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EnumType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -43,19 +42,19 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
         List<Predicate> predicates = new ArrayList<>();
 
         if(StringUtils.hasText(lancamentoFilter.getDescricao())) {
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("descricao")), "%" + lancamentoFilter.getDescricao().toLowerCase() + "%"));
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Lancamento_.descricao)), "%" + lancamentoFilter.getDescricao().toLowerCase() + "%"));
         }
 
-        if(lancamentoFilter.getDataLancamentoDe() !=null) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("dataLancamento"), lancamentoFilter.getDataLancamentoDe()));
+        if(lancamentoFilter.getDataLancamentoDe() != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(Lancamento_.dataLancamento), lancamentoFilter.getDataLancamentoDe()));
         }
 
-        if(lancamentoFilter.getDataLancamentoAte() !=null) {
-            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("dataLancamento"), lancamentoFilter.getDataLancamentoAte()));
+        if(lancamentoFilter.getDataLancamentoAte() != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(Lancamento_.dataLancamento), lancamentoFilter.getDataLancamentoAte()));
         }
 
         if(lancamentoFilter.getEstado() != null) {
-            predicates.add(criteriaBuilder.equal(criteriaBuilder.lower(root.get("estado")), lancamentoFilter.getEstado()));
+            predicates.add(criteriaBuilder.equal(criteriaBuilder.lower(root.get(Lancamento_.estado.getName())), lancamentoFilter.getEstado()));
         }
 
         return predicates.toArray(new Predicate[predicates.size()]);
@@ -64,9 +63,9 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
     private void adicionarRestricoesDePaginacao(TypedQuery<Lancamento> query, Pageable pageable) {
         int paginaActual = pageable.getPageNumber();
         int totalRegistosPorPagina = pageable.getPageSize();
-        int primeiroRegistroDaPagina = paginaActual * totalRegistosPorPagina;
+        int primeiroRegistoDaPagina = paginaActual * totalRegistosPorPagina;
 
-        query.setFirstResult(primeiroRegistroDaPagina);
+        query.setFirstResult(primeiroRegistoDaPagina);
         query.setMaxResults(totalRegistosPorPagina);
     }
 
