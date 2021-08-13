@@ -50,13 +50,13 @@ public class BusinessResource {
         //return ResponseEntity.status(HttpStatus.CREATED).body(businessSalvo);
     //}
 
-    @PostMapping("/lancamentos")
+    @PostMapping("/venda")
     public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
 
-        if(lancamento.getBusiness() == null) {
-            Business business = businessService.generateNewBusiness(lancamento.getDescricao());
-            lancamento.setBusiness(business);
-        }
+//        if(lancamento.getBusiness() == null) {
+//            Business business = businessService.generateNewBusiness(lancamento.getDescricao());
+//            lancamento.setBusiness(business);
+//        }
         Lancamento lancamentoSalvo = lancamentoService.novoLancamento(lancamento, this, response);
         return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
     }

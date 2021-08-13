@@ -12,6 +12,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +45,9 @@ public class LancamentoService {
     }
 
     public Lancamento novoLancamento(Lancamento lancamento, Object source, HttpServletResponse response) {
+        if(lancamento.getValorTotal() == null) {
+            lancamento.setValorTotal(calculaValorTotal(lancamento.getPreco(), lancamento.getQuantidade()));
+        }
         salvarStock(lancamento.getProduto(), lancamento.getQuantidade());
         Lancamento lancamentoSalvo = lancamentoRepository.save(lancamento);
         publisher.publishEvent(new RecursoCriadoEvent(source, response, lancamentoSalvo.getId()));
@@ -75,5 +79,9 @@ public class LancamentoService {
 
     private Long incrementarStock(Long quantidadeAntiga, Long novaQuantidade) {
         return quantidadeAntiga + novaQuantidade;
+    }
+
+    private BigDecimal calculaValorTotal(BigDecimal preco, Long quantidade) {
+        return preco.multiply(BigDecimal.valueOf(quantidade));
     }
 }

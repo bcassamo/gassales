@@ -36,16 +36,10 @@ public class Lancamento {
     @NotNull
     private Long quantidade;
 
-    @NotNull
     private BigDecimal valorTotal;
 
     @NotNull
     @OneToOne
     @JoinColumn(name = "id_produto")
     private Produto produto;
-
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "id_business")
-    private Business business;
 }
