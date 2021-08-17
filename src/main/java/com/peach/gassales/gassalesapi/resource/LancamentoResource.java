@@ -1,8 +1,10 @@
 package com.peach.gassales.gassalesapi.resource;
 
+import com.peach.gassales.gassalesapi.model.Business;
 import com.peach.gassales.gassalesapi.model.Lancamento;
 import com.peach.gassales.gassalesapi.repository.LancamentoRepository;
 import com.peach.gassales.gassalesapi.repository.filter.LancamentoFilter;
+import com.peach.gassales.gassalesapi.service.BusinessService;
 import com.peach.gassales.gassalesapi.service.LancamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import java.util.Optional;
 public class LancamentoResource {
     private LancamentoRepository lancamentoRepository;
     private LancamentoService lancamentoService;
+    private BusinessService businessService;
 
     @Autowired
     private void setLancamentoRepository(LancamentoRepository lancamentoRepository) {
@@ -30,6 +33,12 @@ public class LancamentoResource {
     private void setLancamentoService(LancamentoService lancamentoService) {
         this.lancamentoService = lancamentoService;
     }
+
+    @Autowired
+    private void setBusinessService(BusinessService businessService) {
+        this.businessService = businessService;
+    }
+
 
     @GetMapping
     public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable){
@@ -42,10 +51,17 @@ public class LancamentoResource {
         return lancamento.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // TODO: Eliminar este metodo porque só vai ser criado lancamento no business(Venda ou aquisicao)
     @PostMapping
     public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
         Lancamento lancamentoSalvo = lancamentoService.novoLancamento(lancamento, this, response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
+    }
+
+    @PostMapping("/business")
+    public ResponseEntity<Lancamento> criarBusiness(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
+        Business business = new Business();
+        Lancamento lancamentoSalvo = lancamentoService.novoLancamento(lancamento, this, response);
+        businessService.novoBusiness(business, lancamentoSalvo, this, response);
         return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
     }
 

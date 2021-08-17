@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,7 +16,10 @@ import java.time.LocalDate;
 @Table(name = "business")
 public class Business {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String codigoBusiness;
 
     @NotNull
     @Size(min = 3, max = 20)
@@ -25,12 +29,11 @@ public class Business {
     @Column(name = "data_business")
     private LocalDate dataBusiness;
 
-    @NotNull
-    @Column(name = "valor_business")
-    private BigDecimal valorBusiness;
+//    @NotNull
+//    @Column(name = "valor_business")
+//    private BigDecimal valorBusiness;
 
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "id_entidade")
-    private Entidade entidade;
+    @JoinColumn(name = "id_lancamento")
+    private Lancamento lancamento;
 }

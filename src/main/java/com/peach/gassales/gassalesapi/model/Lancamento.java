@@ -42,4 +42,9 @@ public class Lancamento {
     @OneToOne
     @JoinColumn(name = "id_produto")
     private Produto produto;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "id_entidade")
+    private Entidade entidade;
 }

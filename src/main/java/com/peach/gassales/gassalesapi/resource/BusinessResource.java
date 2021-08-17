@@ -1,11 +1,9 @@
 package com.peach.gassales.gassalesapi.resource;
 
 import com.peach.gassales.gassalesapi.model.Business;
-import com.peach.gassales.gassalesapi.model.Lancamento;
 import com.peach.gassales.gassalesapi.repository.BusinessRepository;
 import com.peach.gassales.gassalesapi.repository.filter.BusinessFilter;
 import com.peach.gassales.gassalesapi.service.BusinessService;
-import com.peach.gassales.gassalesapi.service.LancamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,16 +19,10 @@ import javax.validation.Valid;
 public class BusinessResource {
     private BusinessRepository businessRepository;
     private BusinessService businessService;
-    private LancamentoService lancamentoService;
 
     @Autowired
     private void setBusinessRepository(BusinessRepository businessRepository) {
         this.businessRepository = businessRepository;
-    }
-
-    @Autowired
-    private void setLancamentoService(LancamentoService lancamentoService) {
-        this.lancamentoService = lancamentoService;
     }
 
     @Autowired
@@ -43,6 +35,13 @@ public class BusinessResource {
         return businessRepository.filtrar(businessFilter, pageable);
     }
 
+    // No need this methot o filtrar ja tem codigo do Business
+    /*@GetMapping("/{codigoBusiness}")
+    public ResponseEntity<Business> buscarBusinessesPeloCodigo(@PathVariable String codigoBusiness) {
+        Optional<Business> business = businessService.buscarBusinessPeloCodigo(codigoBusiness);
+        return business.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }*/
+
     // Alterei a tabela produto para adicionar preco
     //@PostMapping("/aquisicao")
     //public ResponseEntity<Business> criar(@Valid @RequestBody Business business, HttpServletResponse response) {
@@ -50,14 +49,15 @@ public class BusinessResource {
         //return ResponseEntity.status(HttpStatus.CREATED).body(businessSalvo);
     //}
 
-    @PostMapping("/venda")
-    public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
+    //@PostMapping
+    //public ResponseEntity<Business> criar(@Valid @RequestBody Business business, HttpServletResponse response) {
 
+        //Business businessSalvo = businessService.novoBusiness(business, this, response);
 //        if(lancamento.getBusiness() == null) {
 //            Business business = businessService.generateNewBusiness(lancamento.getDescricao());
 //            lancamento.setBusiness(business);
 //        }
-        Lancamento lancamentoSalvo = lancamentoService.novoLancamento(lancamento, this, response);
-        return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
-    }
+        //Lancamento lancamentoSalvo = lancamentoService.novoLancamento(lancamento, this, response);
+        //return ResponseEntity.status(HttpStatus.CREATED).body(businessSalvo);
+    //}
 }

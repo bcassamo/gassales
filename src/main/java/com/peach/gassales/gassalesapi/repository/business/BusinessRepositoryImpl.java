@@ -43,6 +43,11 @@ public class BusinessRepositoryImpl implements BusinessRepositoryQuery {
     private Predicate[] criarRestricoes(BusinessFilter businessFilter, CriteriaBuilder criteriaBuilder, Root<Business> root) {
         List<Predicate> predicates = new ArrayList<>();
 
+        if (StringUtils.hasText(businessFilter.getCodigoBusiness())) {
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Business_.codigoBusiness)),
+                    "%" + businessFilter.getCodigoBusiness().toLowerCase() + "%"));
+        }
+
         if (StringUtils.hasText(businessFilter.getDescricao())) {
             predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Business_.descricao)),
                     "%" + businessFilter.getDescricao().toLowerCase() + "%"));
