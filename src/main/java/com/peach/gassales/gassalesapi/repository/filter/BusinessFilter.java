@@ -18,6 +18,4 @@ public class BusinessFilter {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataBusinessAte;
-
-    // private Entidade entidade;
 }

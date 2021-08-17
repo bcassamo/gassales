@@ -38,21 +38,10 @@ public class BusinessService {
         business.setDataBusiness(lancamento.getDataLancamento());
         business.setLancamento(lancamento);
 
-        //business = gerarNovoBusiness(business);
-        // TODO Criar Lancamento apartir daqui atraves dos valores do business atribuir lancamento
-        // pensar em duas possibilidades, salvar como business, o que esta a acortecer ou salvar como
-        // lancamento (metodo criar do resource) depois gerar o business
-
         Business businessSalvo = businessRepository.save(business);
         publisher.publishEvent(new RecursoCriadoEvent(source, response, businessSalvo.getId()));
         return businessSalvo;
     }
-
-//    public Business gerarNovoBusiness(Business business) {
-//        business.setCodigoBusiness(gerarBusinessId(business.getDescricao()));
-//        business.setDataBusiness(LocalDate.now());
-//        return business;
-//    }
 
     private String gerarBusinessId(String businessType) {
         Business business = businessRepository.findTopByOrderByIdDesc();
