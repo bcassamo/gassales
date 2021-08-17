@@ -36,7 +36,6 @@ public class Lancamento {
     @NotNull
     private Long quantidade;
 
-    @NotNull
     private BigDecimal valorTotal;
 
     @NotNull
@@ -46,6 +45,6 @@ public class Lancamento {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "id_business")
-    private Business business;
+    @JoinColumn(name = "id_entidade")
+    private Entidade entidade;
 }

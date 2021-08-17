@@ -67,6 +67,11 @@ public class GassalesExceptionHandler extends ResponseEntityExceptionHandler {
         return tratamentoOperacaoNaoPermitida(ex, request);
     }
 
+    @ExceptionHandler({IllegalStateException.class})
+    public ResponseEntity<Object> handleIllegalStateException(IllegalStateException ex, WebRequest request) {
+        return  tratamentoQuantidadeInsuficiente(ex, request);
+    }
+
     private ResponseEntity<Object> tratamentoRecursoNaoEncontrado(Exception ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("recurso.nao-encontrado", null, LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ex.toString();
@@ -77,6 +82,14 @@ public class GassalesExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> tratamentoOperacaoNaoPermitida(Exception ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("recurso.operacao-nao-permitida", null, LocaleContextHolder.getLocale());
+        String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
+
+        List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+        return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    private ResponseEntity<Object> tratamentoQuantidadeInsuficiente(Exception ex, WebRequest request) {
+        String mensagemUsuario = messageSource.getMessage("recurso.quantidade-insuficiente", null, LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
 
         List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));

@@ -9,6 +9,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class BusinessFilter {
+    private String codigoBusiness;
+
     private String descricao;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -16,6 +18,4 @@ public class BusinessFilter {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataBusinessAte;
-
-    // private Entidade entidade;
 }

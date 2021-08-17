@@ -38,10 +38,13 @@ public class BusinessRepositoryImpl implements BusinessRepositoryQuery {
         return new PageImpl<>(query.getResultList(), pageable, total(businessFilter));
     }
 
-    //TODO: filtrarVenda()
-
     private Predicate[] criarRestricoes(BusinessFilter businessFilter, CriteriaBuilder criteriaBuilder, Root<Business> root) {
         List<Predicate> predicates = new ArrayList<>();
+
+        if (StringUtils.hasText(businessFilter.getCodigoBusiness())) {
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Business_.codigoBusiness)),
+                    "%" + businessFilter.getCodigoBusiness().toLowerCase() + "%"));
+        }
 
         if (StringUtils.hasText(businessFilter.getDescricao())) {
             predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Business_.descricao)),
@@ -55,11 +58,6 @@ public class BusinessRepositoryImpl implements BusinessRepositoryQuery {
         if(businessFilter.getDataBusinessAte() != null) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(Business_.dataBusiness), businessFilter.getDataBusinessAte()));
         }
-
-        // if(businessFilter.getEntidade() != null) {
-            // predicates.add(criteriaBuilder.like(root.get(Business_.entidade.getName()),
-            //        "%" + businessFilter.getEntidade() + "%"));
-        // }
 
         return predicates.toArray(new Predicate[predicates.size()]);
     }

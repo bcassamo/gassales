@@ -1,16 +1,15 @@
 package com.peach.gassales.gassalesapi.service;
 
+import com.peach.gassales.gassalesapi.event.RecursoCriadoEvent;
 import com.peach.gassales.gassalesapi.model.Business;
 import com.peach.gassales.gassalesapi.model.Lancamento;
 import com.peach.gassales.gassalesapi.repository.BusinessRepository;
-import com.peach.gassales.gassalesapi.resource.BusinessResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Service
 public class BusinessService {
@@ -33,32 +32,36 @@ public class BusinessService {
         this.lancamentoService = lancamentoService;
     }
 
-    public Business generateNewBusiness(String businessType) {
-        Business business = new Business();
-        business.setId(gerarBusinessId(businessType));
-        business.setDescricao(businessType);
-        business.setDataBusiness(LocalDate.now());
-        return business;
-    }
-    //public Business novaAquisicao(Business business, BusinessResource businessResource, HttpServletResponse response) {
+    public Business novoBusiness(Business business, Lancamento lancamento, Object source, HttpServletResponse response) {
+        business.setCodigoBusiness(gerarBusinessId(lancamento.getDescricao()));
+        business.setDescricao(lancamento.getDescricao());
+        business.setDataBusiness(lancamento.getDataLancamento());
+        business.setLancamento(lancamento);
 
-
-    //}
-
-    private Lancamento salvarLancamento(Lancamento lancamento, HttpServletResponse response) {
-
-        return lancamentoService.novoLancamento(lancamento, this, response);
+        Business businessSalvo = businessRepository.save(business);
+        publisher.publishEvent(new RecursoCriadoEvent(source, response, businessSalvo.getId()));
+        return businessSalvo;
     }
 
     private String gerarBusinessId(String businessType) {
-        String businessId;
-        String data = LocalDate.now().toString();
-        String sequencia = "000";
-
-        for(int i = 0; i < 1000; i++) {
-            sequencia = i + businessType;
+        Business business = businessRepository.findTopByOrderByIdDesc();
+        int savedBusinessCodeSequence = Integer.parseInt(business.getCodigoBusiness().substring(9, business.getCodigoBusiness().length() - 1)) + 1;
+        String sequencia, businessId;
+        int numberOfDigits = (int)(Math.log10(savedBusinessCodeSequence) + 1);
+        switch (numberOfDigits) {
+            case 1: sequencia = "00" + savedBusinessCodeSequence; break;
+            case 2: sequencia = "0" + savedBusinessCodeSequence; break;
+            case 3: sequencia = "" + savedBusinessCodeSequence; break;
+            default: sequencia = String.valueOf(savedBusinessCodeSequence);
         }
-        businessId = data + "-" + sequencia;
+
+        if (businessType.equals("Venda"))
+            sequencia = sequencia + "V";
+        else
+            sequencia = sequencia + "A";
+
+        String data = LocalDate.now().toString().replaceAll("-", "");
+        businessId = data.concat("-" + sequencia);
         return businessId;
     }
 }

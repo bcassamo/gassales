@@ -12,6 +12,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,15 +45,24 @@ public class LancamentoService {
     }
 
     public Lancamento novoLancamento(Lancamento lancamento, Object source, HttpServletResponse response) {
-        salvarStock(lancamento.getProduto(), lancamento.getQuantidade());
+        if(lancamento.getValorTotal() == null) {
+            lancamento.setValorTotal(calculaValorTotal(lancamento.getPreco(), lancamento.getQuantidade()));
+        }
+        salvarStock(lancamento.getProduto(), lancamento.getQuantidade(), lancamento.getDescricao());
         Lancamento lancamentoSalvo = lancamentoRepository.save(lancamento);
         publisher.publishEvent(new RecursoCriadoEvent(source, response, lancamentoSalvo.getId()));
         return lancamentoSalvo;
     }
 
-    private void salvarStock(Produto produto, Long novaQuantidade) {
+    private void salvarStock(Produto produto, Long novaQuantidade, String lancamentoDescricao) {
         Stock stock = localizarStock(produto);
-        if(stock == null) {
+        if (lancamentoDescricao.equals("Venda") & stock != null) {
+            if (stock.getQuantidade() < novaQuantidade)
+                throw new IllegalStateException();
+            stock.setQuantidade(decrementarStock(stock.getQuantidade(), novaQuantidade));
+        } else if (lancamentoDescricao.equals("Venda") & stock == null) {
+            throw new IllegalStateException();
+        } else if (lancamentoDescricao.equals("Aquisição") & stock == null) {
             stock = new Stock();
             stock.setProduto(produto);
             stock.setQuantidade(novaQuantidade);
@@ -75,5 +85,13 @@ public class LancamentoService {
 
     private Long incrementarStock(Long quantidadeAntiga, Long novaQuantidade) {
         return quantidadeAntiga + novaQuantidade;
+    }
+
+    private Long decrementarStock(Long quantidadeAntiga, Long novaQuantidade) {
+        return quantidadeAntiga - novaQuantidade;
+    }
+
+    private BigDecimal calculaValorTotal(BigDecimal preco, Long quantidade) {
+        return preco.multiply(BigDecimal.valueOf(quantidade));
     }
 }
