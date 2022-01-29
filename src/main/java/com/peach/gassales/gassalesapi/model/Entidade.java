@@ -20,7 +20,6 @@ public class Entidade {
     @Size(min = 3, max = 50)
     private String nome;
 
-    @NotNull
     private int nuit;
 
     @NotNull
