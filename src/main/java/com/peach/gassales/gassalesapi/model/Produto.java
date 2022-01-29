@@ -24,6 +24,9 @@ public class Produto {
     @Size(min = 3, max = 255)
     private String descricao;
 
+    @Size(min = 3, max = 20)
+    private String referencia;
+
     @NotNull
     private BigDecimal tamanho;
 
