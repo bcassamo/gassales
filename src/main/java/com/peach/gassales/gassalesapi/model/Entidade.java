@@ -20,7 +20,7 @@ public class Entidade {
     @Size(min = 3, max = 50)
     private String nome;
 
-    private int nuit;
+    private String nuit;
 
     @NotNull
     @Enumerated(EnumType.STRING)

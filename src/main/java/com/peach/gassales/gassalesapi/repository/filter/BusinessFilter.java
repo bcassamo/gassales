@@ -13,6 +13,8 @@ public class BusinessFilter {
 
     private String descricao;
 
+    //private Long idEntidade;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataBusinessDe;
 

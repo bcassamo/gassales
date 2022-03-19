@@ -23,7 +23,6 @@ public class BusinessRepositoryImpl implements BusinessRepositoryQuery {
     @PersistenceContext
     private EntityManager manager;
 
-
     @Override
     public Page<Business> filtrar(BusinessFilter businessFilter, Pageable pageable) {
         CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
@@ -50,6 +49,11 @@ public class BusinessRepositoryImpl implements BusinessRepositoryQuery {
             predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Business_.descricao)),
                     "%" + businessFilter.getDescricao().toLowerCase() + "%"));
         }
+
+        /*if (StringUtils.hasText(String.valueOf(businessFilter.getIdEntidade()))) {
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Business_.entidade.toString())),
+                    "%" + String.valueOf(businessFilter.getIdEntidade()).toLowerCase() + "%"));
+        }*/
 
         if(businessFilter.getDataBusinessDe() != null) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(Business_.dataBusiness), businessFilter.getDataBusinessDe()));
