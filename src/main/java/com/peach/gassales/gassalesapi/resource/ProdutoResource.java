@@ -3,17 +3,18 @@ package com.peach.gassales.gassalesapi.resource;
 import com.peach.gassales.gassalesapi.event.RecursoCriadoEvent;
 import com.peach.gassales.gassalesapi.model.Produto;
 import com.peach.gassales.gassalesapi.repository.ProdutoRepository;
+import com.peach.gassales.gassalesapi.repository.filter.ProdutoFilter;
 import com.peach.gassales.gassalesapi.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -33,7 +34,7 @@ public class ProdutoResource {
     private void setProdutoService(ProdutoService produtoService) { this.produtoService = produtoService; }
 
     @GetMapping
-    public List<Produto> listar() { return produtoRepository.findAll(); }
+    public Page<Produto> pesquisar(ProdutoFilter produtoFilter, Pageable pageable) { return produtoRepository.filtrar(produtoFilter, pageable); }
 
     @GetMapping("/{id}")
     public ResponseEntity<Produto> buscarProdutoPeloCodigo(@PathVariable Long id) {
