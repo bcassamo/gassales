@@ -3,10 +3,14 @@ package com.peach.gassales.gassalesapi.resource;
 import com.peach.gassales.gassalesapi.event.RecursoCriadoEvent;
 import com.peach.gassales.gassalesapi.model.Endereco;
 import com.peach.gassales.gassalesapi.model.Entidade;
+import com.peach.gassales.gassalesapi.model.TipoEntidade;
 import com.peach.gassales.gassalesapi.repository.EntidadeRepository;
+import com.peach.gassales.gassalesapi.repository.filter.EntidadeFilter;
 import com.peach.gassales.gassalesapi.service.EntidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,8 +53,8 @@ public class EntidadeResource {
     }
 
     @GetMapping("/clientes")
-    public List<Entidade> listarClientes() {
-        return entidadeService.buscarTodosClientes();
+    public Page<Entidade> pesquisarClientes(EntidadeFilter entidadeFilter, Pageable pageable) {
+        return entidadeRepository.filtrar(entidadeFilter, pageable, TipoEntidade.CLIENTE);
     }
 
     @GetMapping("/clientes/{id}")

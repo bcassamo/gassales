@@ -1,0 +1,1 @@
+ALTER TABLE entidade MODIFY COLUMN nuit VARCHAR(10);
