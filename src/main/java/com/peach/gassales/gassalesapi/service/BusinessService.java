@@ -37,7 +37,7 @@ public class BusinessService {
         business.setDescricao(lancamento.getDescricao());
         business.setDataBusiness(lancamento.getDataLancamento());
         business.setLancamento(lancamento);
-
+// falta entidade no business
         Business businessSalvo = businessRepository.save(business);
         publisher.publishEvent(new RecursoCriadoEvent(source, response, businessSalvo.getId()));
         return businessSalvo;

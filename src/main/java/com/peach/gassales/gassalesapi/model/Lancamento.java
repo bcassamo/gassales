@@ -43,8 +43,8 @@ public class Lancamento {
     @JoinColumn(name = "id_produto")
     private Produto produto;
 
-    /*@NotNull
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "id_entidade")
-    private Entidade entidade;*/
+    private Entidade entidade;
 }

@@ -31,8 +31,8 @@ public class Business {
     @JoinColumn(name = "id_lancamento")
     private Lancamento lancamento;
 
-    @NotNull
+    /*@NotNull
     @OneToOne
     @JoinColumn(name = "id_entidade")
-    private Entidade entidade;
+    private Entidade entidade;*/
 }
