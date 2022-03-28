@@ -30,9 +30,4 @@ public class Business {
     @ManyToOne
     @JoinColumn(name = "id_lancamento")
     private Lancamento lancamento;
-
-    /*@NotNull
-    @OneToOne
-    @JoinColumn(name = "id_entidade")
-    private Entidade entidade;*/
 }
