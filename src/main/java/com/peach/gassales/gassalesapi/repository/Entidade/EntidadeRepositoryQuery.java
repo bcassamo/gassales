@@ -7,5 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface EntidadeRepositoryQuery {
-    Page<Entidade> filtrar(EntidadeFilter entidadeFilter, Pageable pageable, TipoEntidade tipo);
+    Page<Entidade> filtrarByTipo(EntidadeFilter entidadeFilter, Pageable pageable, TipoEntidade tipo);
+    Page<Entidade> filtrar(EntidadeFilter entidadeFilter, Pageable pageable);
 }

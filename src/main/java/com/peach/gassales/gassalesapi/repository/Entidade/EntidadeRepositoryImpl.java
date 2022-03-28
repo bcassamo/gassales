@@ -24,20 +24,50 @@ public class EntidadeRepositoryImpl implements EntidadeRepositoryQuery {
     private EntityManager manager;
 
     @Override
-    public Page<Entidade> filtrar(EntidadeFilter entidadeFilter, Pageable pageable, TipoEntidade tipo) {
+    public Page<Entidade> filtrar(EntidadeFilter entidadeFilter, Pageable pageable) {
         CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
         CriteriaQuery<Entidade> criteriaQuery = criteriaBuilder.createQuery(Entidade.class);
         Root<Entidade> root = criteriaQuery.from(Entidade.class);
 
-        Predicate[] predicates = criarRestricoes(entidadeFilter, criteriaBuilder, root, tipo);
+        Predicate[] predicates = criarRestricoes(entidadeFilter, criteriaBuilder, root);
         criteriaQuery.where(predicates);
 
         TypedQuery<Entidade> query = manager.createQuery(criteriaQuery);
         adicionarRestricoesDePaginacao(query, pageable);
-        return new PageImpl<>(query.getResultList(), pageable, total(entidadeFilter, tipo));
+        return new PageImpl<>(query.getResultList(), pageable, total(entidadeFilter));
     }
 
-    private Predicate[] criarRestricoes(EntidadeFilter entidadeFilter, CriteriaBuilder criteriaBuilder, Root<Entidade> root, TipoEntidade tipo) {
+    @Override
+    public Page<Entidade> filtrarByTipo(EntidadeFilter entidadeFilter, Pageable pageable, TipoEntidade tipo) {
+        CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+        CriteriaQuery<Entidade> criteriaQuery = criteriaBuilder.createQuery(Entidade.class);
+        Root<Entidade> root = criteriaQuery.from(Entidade.class);
+
+        Predicate[] predicates = criarRestricoesByTipo(entidadeFilter, criteriaBuilder, root, tipo);
+        criteriaQuery.where(predicates);
+
+        TypedQuery<Entidade> query = manager.createQuery(criteriaQuery);
+        adicionarRestricoesDePaginacao(query, pageable);
+        return new PageImpl<>(query.getResultList(), pageable, totalByTipo(entidadeFilter, tipo));
+    }
+
+    private Predicate[] criarRestricoes(EntidadeFilter entidadeFilter, CriteriaBuilder criteriaBuilder, Root<Entidade> root) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (StringUtils.hasText(entidadeFilter.getNome())) {
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Entidade_.nome)),
+                    "%" + entidadeFilter.getNome().toLowerCase() + "%"));
+        }
+
+        if (entidadeFilter.getNuit() != null) {
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Entidade_.nuit)),
+                    "%" + entidadeFilter.getNuit() + "%"));
+        }
+
+        return predicates.toArray(new Predicate[predicates.size()]);
+    }
+
+    private Predicate[] criarRestricoesByTipo(EntidadeFilter entidadeFilter, CriteriaBuilder criteriaBuilder, Root<Entidade> root, TipoEntidade tipo) {
         List<Predicate> predicates = new ArrayList<>();
 
         if(entidadeFilter.getNome() == null && entidadeFilter.getNuit() == null) {
@@ -72,12 +102,24 @@ public class EntidadeRepositoryImpl implements EntidadeRepositoryQuery {
         query.setMaxResults(totalRegistosPorPagina);
     }
 
-    private Long total(EntidadeFilter entidadeFilter, TipoEntidade tipo) {
+    private Long total(EntidadeFilter entidadeFilter) {
         CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         Root<Entidade> root = criteriaQuery.from(Entidade.class);
 
-        Predicate[] predicates = criarRestricoes(entidadeFilter, criteriaBuilder, root, tipo);
+        Predicate[] predicates = criarRestricoes(entidadeFilter, criteriaBuilder, root);
+        criteriaQuery.where(predicates);
+
+        criteriaQuery.select(criteriaBuilder.count(root));
+        return manager.createQuery(criteriaQuery).getSingleResult();
+    }
+
+    private Long totalByTipo(EntidadeFilter entidadeFilter, TipoEntidade tipo) {
+        CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Entidade> root = criteriaQuery.from(Entidade.class);
+
+        Predicate[] predicates = criarRestricoesByTipo(entidadeFilter, criteriaBuilder, root, tipo);
         criteriaQuery.where(predicates);
 
         criteriaQuery.select(criteriaBuilder.count(root));

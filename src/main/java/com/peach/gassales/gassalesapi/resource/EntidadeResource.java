@@ -43,7 +43,9 @@ public class EntidadeResource {
     }
 
     @GetMapping
-    public List<Entidade> listar() { return entidadeRepository.findAll(); }
+    public Page<Entidade> pesquisar(EntidadeFilter entidadeFilter, Pageable pageable) {
+        return entidadeRepository.filtrar(entidadeFilter, pageable);
+    }
 
     @PostMapping
     public ResponseEntity<Entidade> criarEntidade(@Valid @RequestBody Entidade entidade, HttpServletResponse response) {
@@ -54,7 +56,7 @@ public class EntidadeResource {
 
     @GetMapping("/clientes")
     public Page<Entidade> pesquisarClientes(EntidadeFilter entidadeFilter, Pageable pageable) {
-        return entidadeRepository.filtrar(entidadeFilter, pageable, TipoEntidade.CLIENTE);
+        return entidadeRepository.filtrarByTipo(entidadeFilter, pageable, TipoEntidade.CLIENTE);
     }
 
     @GetMapping("/clientes/{id}")
