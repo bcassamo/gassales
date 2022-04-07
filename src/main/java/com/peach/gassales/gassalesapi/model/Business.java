@@ -30,4 +30,7 @@ public class Business {
     @ManyToOne
     @JoinColumn(name = "id_lancamento")
     private Lancamento lancamento;
+
+    @NotNull
+    private boolean finalizado;
 }
