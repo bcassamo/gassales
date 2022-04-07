@@ -33,35 +33,55 @@ public class BusinessService {
     }
 
     public Business novoBusiness(Business business, Lancamento lancamento, Object source, HttpServletResponse response) {
-        business.setCodigoBusiness(gerarBusinessId(lancamento.getDescricao()));
+        business.setCodigoBusiness(gerarBusinessCode(lancamento.getDescricao()));
         business.setDescricao(lancamento.getDescricao());
         business.setDataBusiness(lancamento.getDataLancamento());
         business.setLancamento(lancamento);
-// falta entidade no business
+
         Business businessSalvo = businessRepository.save(business);
         publisher.publishEvent(new RecursoCriadoEvent(source, response, businessSalvo.getId()));
         return businessSalvo;
     }
 
-    private String gerarBusinessId(String businessType) {
+    private String gerarBusinessCode(String businessType) {
         Business business = businessRepository.findTopByOrderByIdDesc();
-        int savedBusinessCodeSequence = Integer.parseInt(business.getCodigoBusiness().substring(9, business.getCodigoBusiness().length() - 1)) + 1;
         String sequencia, businessId;
-        int numberOfDigits = (int)(Math.log10(savedBusinessCodeSequence) + 1);
-        switch (numberOfDigits) {
-            case 1: sequencia = "00" + savedBusinessCodeSequence; break;
-            case 2: sequencia = "0" + savedBusinessCodeSequence; break;
-            case 3: sequencia = "" + savedBusinessCodeSequence; break;
-            default: sequencia = String.valueOf(savedBusinessCodeSequence);
+        LocalDate dataHoje = LocalDate.now();
+        if(business.isFinalizado() || !(dataHoje.toString().equals(business.getDataBusiness().toString()))) {
+
+            int savedBusinessCodeSequence;
+            if(dataHoje.toString().equals(business.getDataBusiness().toString())) {
+                savedBusinessCodeSequence = Integer.parseInt(business.getCodigoBusiness().substring(9, business.getCodigoBusiness().length() - 1)) + 1;
+            }else {
+                savedBusinessCodeSequence = 1;
+            }
+
+            int numberOfDigits = (int) (Math.log10(savedBusinessCodeSequence) + 1);
+            switch (numberOfDigits) {
+                case 1:
+                    sequencia = "00" + savedBusinessCodeSequence;
+                    break;
+                case 2:
+                    sequencia = "0" + savedBusinessCodeSequence;
+                    break;
+                case 3:
+                    sequencia = "" + savedBusinessCodeSequence;
+                    break;
+                default:
+                    sequencia = String.valueOf(savedBusinessCodeSequence);
+            }
+
+            if (businessType.equals("Venda"))
+                sequencia = sequencia + "V";
+            else
+                sequencia = sequencia + "A";
+
+            String data = LocalDate.now().toString().replaceAll("-", "");
+            businessId = data.concat("-" + sequencia);
         }
-
-        if (businessType.equals("Venda"))
-            sequencia = sequencia + "V";
-        else
-            sequencia = sequencia + "A";
-
-        String data = LocalDate.now().toString().replaceAll("-", "");
-        businessId = data.concat("-" + sequencia);
+        else {
+            businessId = business.getCodigoBusiness();
+        }
         return businessId;
     }
 }
