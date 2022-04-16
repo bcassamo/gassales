@@ -30,7 +30,7 @@ public class Lancamento {
     @Enumerated(EnumType.STRING)
     private EstadoProduto estado;
 
-    @NotNull
+
     private BigDecimal preco;
 
     @NotNull

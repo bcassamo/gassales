@@ -65,6 +65,12 @@ public class LancamentoResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
     }
 
+    @PutMapping("/business/{codigoBusiness}/finalizado")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public  void finalizarBusiness(@PathVariable String codigoBusiness, @RequestBody boolean finalizado){
+        businessService.finalizarBusiness(codigoBusiness, finalizado);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {

@@ -12,4 +12,6 @@ public interface EntidadeRepository extends JpaRepository<Entidade, Long>, Entid
     List<Entidade> findAllByTipo(TipoEntidade tipoEntidade);
     Optional<Entidade> findEntidadeByTipoAndId(TipoEntidade tipoEntidade, Long id);
     void deleteByTipoAndId(TipoEntidade tipoEntidade, Long id);
+
+    Entidade findByNome(String nome);
 }

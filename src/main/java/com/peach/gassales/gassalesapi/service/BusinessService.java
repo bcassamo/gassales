@@ -6,10 +6,12 @@ import com.peach.gassales.gassalesapi.model.Lancamento;
 import com.peach.gassales.gassalesapi.repository.BusinessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class BusinessService {
@@ -41,6 +43,22 @@ public class BusinessService {
         Business businessSalvo = businessRepository.save(business);
         publisher.publishEvent(new RecursoCriadoEvent(source, response, businessSalvo.getId()));
         return businessSalvo;
+    }
+
+    public void finalizarBusiness(String codigoBusiness, boolean finalizado) {
+        List<Business> businessList = getBusinessByCodigoBusiness(codigoBusiness);
+        businessList.forEach(business -> {
+            business.setFinalizado(finalizado);
+            businessRepository.save(business);
+        });
+    }
+
+    private List<Business> getBusinessByCodigoBusiness(String codigoBusiness) {
+        List<Business> businessList = businessRepository.findAllByCodigoBusiness(codigoBusiness);
+        if(businessList == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+        return businessList;
     }
 
     private String gerarBusinessCode(String businessType) {
