@@ -4,6 +4,7 @@ import com.peach.gassales.gassalesapi.event.RecursoCriadoEvent;
 import com.peach.gassales.gassalesapi.model.Lancamento;
 import com.peach.gassales.gassalesapi.model.Produto;
 import com.peach.gassales.gassalesapi.model.Stock;
+import com.peach.gassales.gassalesapi.repository.EntidadeRepository;
 import com.peach.gassales.gassalesapi.repository.LancamentoRepository;
 import com.peach.gassales.gassalesapi.repository.ProdutoRepository;
 import com.peach.gassales.gassalesapi.repository.StockRepository;
@@ -22,6 +23,8 @@ public class LancamentoService {
     private StockRepository stockRepository;
     private ProdutoRepository produtoRepository;
     private ApplicationEventPublisher publisher;
+
+    private EntidadeRepository entidadeRepository;
 
     @Autowired
     private void setLancamentoRepository(LancamentoRepository lancamentoRepository) {
@@ -43,6 +46,11 @@ public class LancamentoService {
         this.publisher = publisher;
     }
 
+    @Autowired
+    private void setEntidadeRepository(EntidadeRepository entidadeRepository) {
+        this.entidadeRepository = entidadeRepository;
+    }
+
     public Optional<Lancamento> buscarLancamentoPeloCodigo(Long id) {
         Optional<Lancamento> lancamento = lancamentoRepository.findById(id);
         if (lancamento.isEmpty())
@@ -51,11 +59,19 @@ public class LancamentoService {
     }
 
     public Lancamento novoLancamento(Lancamento lancamento, Object source, HttpServletResponse response) {
+        Produto produto = produtoRepository.getById(lancamento.getProduto().getId());
+        if(lancamento.getDescricao().equals("Venda")) {
+            lancamento.setPreco(produto.getPreco());
+            if (lancamento.getEntidade().getId() == null && lancamento.getEntidade().getNome() != null) {
+                lancamento.setEntidade(entidadeRepository.findByNome(lancamento.getEntidade().getNome()));
+            }
+        }
+
         if(lancamento.getValorTotal() == null) {
             lancamento.setValorTotal(calculaValorTotal(lancamento.getPreco(), lancamento.getQuantidade()));
         }
-        Produto produto = produtoRepository.getById(lancamento.getProduto().getId());
         salvarStock(produto, lancamento.getQuantidade(), lancamento.getDescricao());
+
         Lancamento lancamentoSalvo = lancamentoRepository.save(lancamento);
         publisher.publishEvent(new RecursoCriadoEvent(source, response, lancamentoSalvo.getId()));
         return lancamentoSalvo;
