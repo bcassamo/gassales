@@ -54,6 +54,12 @@ public class EntidadeResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(entidadeSalvo);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Entidade> buscarPeloCodigo(@PathVariable Long id){
+        Optional<Entidade> entidade = entidadeService.buscarPeloCodigo(id);
+        return entidade.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/clientes")
     public Page<Entidade> pesquisarClientes(EntidadeFilter entidadeFilter, Pageable pageable) {
         return entidadeRepository.filtrarByTipo(entidadeFilter, pageable, TipoEntidade.CLIENTE);

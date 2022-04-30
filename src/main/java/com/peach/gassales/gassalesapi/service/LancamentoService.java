@@ -22,6 +22,8 @@ public class LancamentoService {
     private LancamentoRepository lancamentoRepository;
     private StockRepository stockRepository;
     private ProdutoRepository produtoRepository;
+
+    private ProdutoService produtoService;
     private ApplicationEventPublisher publisher;
 
     private EntidadeRepository entidadeRepository;
@@ -42,6 +44,11 @@ public class LancamentoService {
     }
 
     @Autowired
+    private void setProdutoService(ProdutoService produtoService) {
+        this.produtoService = produtoService;
+    }
+
+    @Autowired
     private void setPublisher(ApplicationEventPublisher publisher) {
         this.publisher = publisher;
     }
@@ -59,18 +66,19 @@ public class LancamentoService {
     }
 
     public Lancamento novoLancamento(Lancamento lancamento, Object source, HttpServletResponse response) {
-        Produto produto = produtoRepository.getById(lancamento.getProduto().getId());
+        Long productId = lancamento.getProduto().getId();
+        Optional<Produto> produto = produtoService.buscarProdutoPeloCodigo(lancamento.getProduto().getId());
         if(lancamento.getDescricao().equals("Venda")) {
-            lancamento.setPreco(produto.getPreco());
-            if (lancamento.getEntidade().getId() == null && lancamento.getEntidade().getNome() != null) {
+            lancamento.setPreco(produto.get().getPreco());
+            /*if (lancamento.getEntidade().getId() == null && lancamento.getEntidade().getNome() != null) {
                 lancamento.setEntidade(entidadeRepository.findByNome(lancamento.getEntidade().getNome()));
-            }
+            }*/
         }
 
         if(lancamento.getValorTotal() == null) {
             lancamento.setValorTotal(calculaValorTotal(lancamento.getPreco(), lancamento.getQuantidade()));
         }
-        salvarStock(produto, lancamento.getQuantidade(), lancamento.getDescricao());
+        salvarStock(produto.get(), lancamento.getQuantidade(), lancamento.getDescricao());
 
         Lancamento lancamentoSalvo = lancamentoRepository.save(lancamento);
         publisher.publishEvent(new RecursoCriadoEvent(source, response, lancamentoSalvo.getId()));
@@ -78,7 +86,7 @@ public class LancamentoService {
     }
 
     private void salvarStock(Produto produto, Long novaQuantidade, String lancamentoDescricao) {
-        Stock stock = stockRepository.getById(produto.getStock().getId());
+        Stock stock = stockRepository.findStockByProduto(produto);
         if (lancamentoDescricao.equals("Venda") & stock != null) {
             if (stock.getQuantidade() < novaQuantidade)
                 throw new IllegalStateException();
@@ -88,6 +96,7 @@ public class LancamentoService {
         } else if (lancamentoDescricao.equals("Aquisição") & stock == null) {
             stock = new Stock();
             stock.setQuantidade(novaQuantidade);
+            stock.setProduto(produto);
         } else {
             stock.setQuantidade(incrementarStock(stock.getQuantidade(), novaQuantidade));
         }

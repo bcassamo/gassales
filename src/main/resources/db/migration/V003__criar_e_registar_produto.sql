@@ -10,4 +10,4 @@ CREATE TABLE produto (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO produto (nome, descricao, referencia, tamanho, preco, id_tipo_produto) values ('Oxigénio', 'Botija de Oxigénio', 'R250', 8, 640.00, 1);
-INSERT INTO produto (nome, descricao, referencia, tamanho, preco, id_tipo_produto) values ('Couve', null, null, 0, 50.00, 2);
+INSERT INTO produto (nome, descricao, referencia, tamanho, preco, id_tipo_produto) values ('Nitrogénio', 'Botija de Nitrogénio', null, 14, 1500.00, 1);

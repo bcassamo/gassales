@@ -53,6 +53,7 @@ public class LancamentoResource {
 
     @PostMapping
     public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
+        lancamento.setCodigoBusiness(businessService.gerarBusinessCode(lancamento.getDescricao()));
         Lancamento lancamentoSalvo = lancamentoService.novoLancamento(lancamento, this, response);
         return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
     }

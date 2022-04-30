@@ -27,9 +27,14 @@ public class Business {
     @Column(name = "data_business")
     private LocalDate dataBusiness;
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "id_lancamento")
-    private Lancamento lancamento;
+    private Lancamento lancamento;*/
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "id_entidade")
+    private Entidade entidade;
 
     @NotNull
     private boolean finalizado;

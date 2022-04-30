@@ -23,6 +23,13 @@ public class EntidadeService {
         this.entidadeRepository = entidadeRepository;
     }
 
+    public Optional<Entidade> buscarPeloCodigo(Long id) {
+        Optional<Entidade> entidade = entidadeRepository.findById(id);
+        if(entidade.isEmpty())
+            throw new EmptyResultDataAccessException(1);
+        return entidade;
+    }
+
     /**
      * Procura Cliente atraves do seu codigo
      * @param id parametro
