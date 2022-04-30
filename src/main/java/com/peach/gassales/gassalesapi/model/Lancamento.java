@@ -18,6 +18,8 @@ public class Lancamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String codigoBusiness;
+
     @NotNull
     @Size(min = 3, max = 20)
     private String descricao;
@@ -43,8 +45,8 @@ public class Lancamento {
     @JoinColumn(name = "id_produto")
     private Produto produto;
 
-    @NotNull
+    /*@NotNull
     @ManyToOne
     @JoinColumn(name = "id_entidade")
-    private Entidade entidade;
+    private Entidade entidade;*/
 }

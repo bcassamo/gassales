@@ -1,7 +1,7 @@
 CREATE TABLE entidade (
      id BIGINT PRIMARY KEY AUTO_INCREMENT,
      nome VARCHAR(50) NOT NULL,
-     nuit INT,
+     nuit VARCHAR(10),
      tipo VARCHAR(20) NOT NULL,
      bairro VARCHAR(50),
      rua VARCHAR(50),

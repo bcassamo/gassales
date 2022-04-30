@@ -17,4 +17,9 @@ public class Stock {
 
     @NotNull
     private Long quantidade;
+
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "id_produto")
+    private Produto produto;
 }

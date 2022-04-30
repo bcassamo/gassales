@@ -38,8 +38,8 @@ public class Produto {
     @JoinColumn(name = "id_tipo_produto")
     private TipoProduto tipoProduto;
 
-    @NotNull
+    /*@NotNull
     @OneToOne
     @JoinColumn(name = "id_stock")
-    private Stock stock;
+    private Stock stock;*/
 }

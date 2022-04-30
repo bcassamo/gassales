@@ -38,7 +38,7 @@ public class BusinessService {
         business.setCodigoBusiness(gerarBusinessCode(lancamento.getDescricao()));
         business.setDescricao(lancamento.getDescricao());
         business.setDataBusiness(lancamento.getDataLancamento());
-        business.setLancamento(lancamento);
+        //business.setLancamento(lancamento);
 
         Business businessSalvo = businessRepository.save(business);
         publisher.publishEvent(new RecursoCriadoEvent(source, response, businessSalvo.getId()));
@@ -61,7 +61,7 @@ public class BusinessService {
         return businessList;
     }
 
-    private String gerarBusinessCode(String businessType) {
+    public String gerarBusinessCode(String businessType) {
         Business business = businessRepository.findTopByOrderByIdDesc();
         String sequencia, businessId;
         LocalDate dataHoje = LocalDate.now();
