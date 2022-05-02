@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("gassales")
 @Getter @Setter
 public class GassalesProperty {
-    private  String originPermitida = "http://localhost:8080";
+    private  String originPermitida = "https://peachgassales-api.herokuapp.com";
 
 }
