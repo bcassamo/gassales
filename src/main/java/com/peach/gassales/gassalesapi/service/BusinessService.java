@@ -45,6 +45,12 @@ public class BusinessService {
         return businessSalvo;
     }
 
+    public Business newBusiness(Business business, Object source, HttpServletResponse response) {
+        Business businessSalvo = businessRepository.save(business);
+        publisher.publishEvent(new RecursoCriadoEvent(source, response, businessSalvo.getId()));
+        return businessSalvo;
+    }
+
     public void finalizarBusiness(String codigoBusiness, boolean finalizado) {
         List<Business> businessList = getBusinessByCodigoBusiness(codigoBusiness);
         businessList.forEach(business -> {

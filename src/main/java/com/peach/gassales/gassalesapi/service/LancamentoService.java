@@ -68,15 +68,15 @@ public class LancamentoService {
     public Lancamento novoLancamento(Lancamento lancamento, Object source, HttpServletResponse response) {
         Long productId = lancamento.getProduto().getId();
         Optional<Produto> produto = produtoService.buscarProdutoPeloCodigo(lancamento.getProduto().getId());
-        if(lancamento.getDescricao().equals("Venda")) {
-            lancamento.setPreco(produto.get().getPreco());
+        //if(lancamento.getDescricao().equals("Venda")) {
+            //lancamento.setPreco(produto.get().getPreco());
             /*if (lancamento.getEntidade().getId() == null && lancamento.getEntidade().getNome() != null) {
                 lancamento.setEntidade(entidadeRepository.findByNome(lancamento.getEntidade().getNome()));
             }*/
-        }
+        //}
 
         if(lancamento.getValorTotal() == null) {
-            lancamento.setValorTotal(calculaValorTotal(lancamento.getPreco(), lancamento.getQuantidade()));
+            lancamento.setValorTotal(calculaValorTotal(produto.get().getPreco(), lancamento.getQuantidade()));
         }
         salvarStock(produto.get(), lancamento.getQuantidade(), lancamento.getDescricao());
 

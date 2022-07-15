@@ -59,11 +59,11 @@ public class LancamentoResource {
     }
 
     @PostMapping("/business")
-    public ResponseEntity<Lancamento> criarBusiness(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
-        Business business = new Business();
-        Lancamento lancamentoSalvo = lancamentoService.novoLancamento(lancamento, this, response);
-        businessService.novoBusiness(business, lancamentoSalvo, this, response);
-        return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
+    public ResponseEntity<Business> criarBusiness(@Valid @RequestBody Business business, HttpServletResponse response) {
+        // Business business = new Business();
+        // Lancamento lancamentoSalvo = lancamentoService.novoLancamento(lancamento, this, response);
+        Business businessSalvo = businessService.newBusiness(business, this, response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(businessSalvo);
     }
 
     @PutMapping("/business/{codigoBusiness}/finalizado")

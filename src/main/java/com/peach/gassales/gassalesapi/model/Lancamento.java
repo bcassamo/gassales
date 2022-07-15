@@ -33,7 +33,7 @@ public class Lancamento {
     private EstadoProduto estado;
 
 
-    private BigDecimal preco;
+    //private BigDecimal preco;
 
     @NotNull
     private Long quantidade;

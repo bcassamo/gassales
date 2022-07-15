@@ -2,6 +2,7 @@ package com.peach.gassales.gassalesapi.resource;
 
 import com.peach.gassales.gassalesapi.event.RecursoCriadoEvent;
 import com.peach.gassales.gassalesapi.model.Produto;
+import com.peach.gassales.gassalesapi.model.Stock;
 import com.peach.gassales.gassalesapi.repository.ProdutoRepository;
 import com.peach.gassales.gassalesapi.repository.filter.ProdutoFilter;
 import com.peach.gassales.gassalesapi.service.ProdutoService;
@@ -40,6 +41,12 @@ public class ProdutoResource {
     public ResponseEntity<Produto> buscarProdutoPeloCodigo(@PathVariable Long id) {
         Optional<Produto> produto = produtoService.buscarProdutoPeloCodigo(id);
         return produto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/stock")
+    public ResponseEntity<Stock> buscarStockDoProduto(@PathVariable Long id) {
+        Optional<Stock> stock = produtoService.buscarStockDoProduto(id);
+        return stock.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
