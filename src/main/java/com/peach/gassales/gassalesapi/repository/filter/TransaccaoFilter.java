@@ -1,5 +1,6 @@
 package com.peach.gassales.gassalesapi.repository.filter;
 
+import com.peach.gassales.gassalesapi.model.Entidade;
 import com.peach.gassales.gassalesapi.model.EstadoProduto;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,15 +12,20 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class LancamentoFilter {
-    private String descricao;
+public class TransaccaoFilter {
+
+    private String idTransaccao;
+
+    private String tipo;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dataLancamentoDe;
+    private LocalDate dataTransaccaoDe;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dataLancamentoAte;
+    private LocalDate dataTransaccaoAte;
 
     @Enumerated(EnumType.STRING)
     private EstadoProduto estado;
+
+    //TODO: Adicionar Filtro por Entidade
 }

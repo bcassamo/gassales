@@ -7,6 +7,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("gassales")
 @Getter @Setter
 public class GassalesProperty {
-    private  String originPermitida = "https://peachgassales-angular.herokuapp.com";
-
+    //private  String originPermitida = "https://peachgassales-angular.herokuapp.com";
+    private  String originPermitida = "http://localhost:4200";
 }
