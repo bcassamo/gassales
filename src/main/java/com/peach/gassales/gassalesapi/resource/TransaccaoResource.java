@@ -38,7 +38,6 @@ public class TransaccaoResource {
 
     @PostMapping
     public ResponseEntity<Transaccao> criar(@Valid @RequestBody Transaccao transaccao, HttpServletResponse response) {
-        transaccao.setIdTransaccao(transaccaoService.gerarIdtransaccao(transaccao.getTipo()));
         Transaccao transaccaoSalva = transaccaoService.novaTransaccao(transaccao, this, response);
         return ResponseEntity.status(HttpStatus.CREATED).body(transaccaoSalva);
     }
