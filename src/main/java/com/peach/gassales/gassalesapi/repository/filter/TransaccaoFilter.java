@@ -14,6 +14,8 @@ import java.time.LocalDate;
 @Setter
 public class TransaccaoFilter {
 
+    private String nomeEntidade;
+
     private String idTransaccao;
 
     private String tipo;
@@ -26,6 +28,4 @@ public class TransaccaoFilter {
 
     @Enumerated(EnumType.STRING)
     private EstadoProduto estado;
-
-    //TODO: Adicionar Filtro por Entidade
 }
