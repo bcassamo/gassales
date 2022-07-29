@@ -6,5 +6,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface TransaccaoRepositoryQuery {
-    public Page<Transaccao> filtrar(TransaccaoFilter transaccaoFilter, Pageable pageable);
+    Page<Transaccao> filtrar(TransaccaoFilter transaccaoFilter, Pageable pageable);
 }

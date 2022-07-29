@@ -40,6 +40,11 @@ public class TransaccaoRepositoryImpl implements TransaccaoRepositoryQuery{
     private Predicate[] criarRestricoes(TransaccaoFilter transaccaoFilter, CriteriaBuilder criteriaBuilder, Root<Transaccao> root) {
         List<Predicate> predicates = new ArrayList<>();
 
+        if (StringUtils.hasText(transaccaoFilter.getNomeEntidade())) {
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Transaccao_.ENTIDADE)),
+                    "%" + transaccaoFilter.getNomeEntidade().toLowerCase() + "%"));
+        }
+
         if (StringUtils.hasText(transaccaoFilter.getIdTransaccao())) {
             predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Transaccao_.idTransaccao)),
                     "%" + transaccaoFilter.getIdTransaccao().toLowerCase() + "%"));
