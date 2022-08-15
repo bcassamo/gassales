@@ -90,8 +90,8 @@ public class EntidadeResource {
     }
 
     @GetMapping("/fornecedores")
-    public List<Entidade> listarFornecedores(){
-        return entidadeService.buscarTodosFornecedores();
+    public Page<Entidade> pesquisarFornecedores(EntidadeFilter entidadeFilter, Pageable pageable) {
+        return entidadeRepository.filtrarByTipo(entidadeFilter, pageable, TipoEntidade.FORNECEDOR);
     }
 
     @GetMapping("/fornecedores/{id}")
